@@ -1,56 +1,25 @@
-# AppSec Zero → Hero
+# AppSec Zero → Hero: Learning Trail & Labs
 
-A self-paced course that takes you from "what is HTTP?" to operating as a **senior application security engineer**: someone who finds and exploits bugs, fixes them at the root, threat-models whole systems, builds security into the SDLC, and runs an AppSec program.
+A self-study guide for going from beginner to senior application security engineer, built on **real, public, high-quality resources** plus **hands-on labs you build yourself**.
 
-> **Ethics first.** Every offensive technique here is for systems you own or are explicitly authorized to test (your own labs, CTFs, bug bounty programs within scope, pentest engagements with written authorization). Testing anything else is illegal in most jurisdictions and ends careers.
+| File | What's in it |
+|---|---|
+| [**LEARNING-TRAIL.md**](LEARNING-TRAIL.md) | An ordered trail of websites, free courses, standards, tools and books, with what you learn from each and when you're done with it. Five stages: Foundations → Web Vulnerabilities → Building Secure Software → Security at Scale → Expert & Senior. |
+| [**labs/LOCAL-LAB.md**](labs/LOCAL-LAB.md) | Your local practice environment: tools, Burp setup, a Docker "practice range" of deliberately vulnerable apps, API/Kubernetes targets, then **building your own app securely** (with security tests and custom Semgrep rules) and a **CI/CD security pipeline**. |
+| [**labs/AWS-LAB.md**](labs/AWS-LAB.md) | A safe AWS environment: account lockdown, guardrails, logging and detection, deploying your app with Terraform and no inbound exposure, Prowler scanning, flAWS/CloudGoat practice, and finding your own activity in the logs. |
 
----
+## How the pieces fit together
 
-## How to use this course
+| Trail stage | Read / practice | Build |
+|---|---|---|
+| 0 — Foundations | MDN, Linux Journey, Bandit, TryHackMe, OWASP Top 10 | Local Lab §1–2 |
+| 1 — Web vulnerabilities | PortSwigger Web Security Academy, Juice Shop, WebGoat, WSTG | Local Lab §2–3 |
+| 2 — Secure software | OWASP Cheat Sheets, ASVS, Semgrep, API Top 10, Cryptopals | Local Lab §4 |
+| 3 — Security at scale | Threat modeling, DevSecOps, SLSA, AWS Security Pillar, flAWS | Local Lab §5 + AWS Lab |
+| 4 — Expert & senior | Expert labs, research, SAMM, BSIMM, LLM security | Extend everything; mentor others |
 
-1. **Go in order.** Each phase assumes the previous one.
-2. **Do the labs.** Reading about SQL injection teaches you ~10%. Exploiting it, then fixing it, then writing a test that proves the fix, teaches you the rest.
-3. **Answer the checkpoint questions out loud or in writing** before moving on. If you can't explain it simply, you don't know it yet.
-4. **Keep a learning journal** (a private repo works well): notes, payloads that worked, write-ups of each lab. By Phase 4 this becomes your portfolio.
-5. **Time-box.** Suggested pace is 8–12 hours/week. Total: roughly 9–14 months to the end of Phase 4; senior-level judgment then comes from applying it at work for a few years.
+## Ground rules
 
-## Roadmap
-
-| Phase | Level | Modules | Est. time |
-|---|---|---|---|
-| **0 — Foundations** | Absolute beginner | [01 How the Web Works](course/01-how-the-web-works.md) · [02 Linux, Programming & Tooling](course/02-linux-programming-tooling.md) · [03 Security Fundamentals](course/03-security-fundamentals.md) | 6–8 weeks |
-| **1 — Breaking Web Apps** | Junior | [04 Injection](course/04-injection.md) · [05 XSS & Client-Side](course/05-xss-and-client-side.md) · [06 AuthN, Sessions & Access Control](course/06-authn-sessions-access-control.md) · [07 Server-Side Attacks](course/07-server-side-attacks.md) | 10–12 weeks |
-| **2 — Building Secure Software** | Mid-level | [08 Secure Coding & Code Review](course/08-secure-coding-and-code-review.md) · [09 Applied Cryptography](course/09-applied-cryptography.md) · [10 API & Modern Architecture Security](course/10-api-security.md) | 8–10 weeks |
-| **3 — Security at Scale** | Senior | [11 Threat Modeling](course/11-threat-modeling.md) · [12 DevSecOps & Supply Chain](course/12-devsecops-and-supply-chain.md) · [13 Cloud & Container Security](course/13-cloud-and-container-security.md) | 8–10 weeks |
-| **4 — Expert** | Senior / Staff | [14 Advanced Exploitation & Research](course/14-advanced-exploitation.md) · [15 Building an AppSec Program](course/15-appsec-program.md) · [16 Senior Mindset, Leadership & Career](course/16-senior-mindset-and-career.md) | 8–10 weeks |
-| **Capstone** | Proof | [Capstone Project](course/capstone.md) | 4–6 weeks |
-
-Supporting material:
-- [Lab Setup](course/lab-setup.md) — build your safe practice environment (do this first)
-- [Resources & Reading List](course/resources.md)
-- [Glossary](course/glossary.md)
-
-## What "senior" means (your target)
-
-| Skill | Junior | Mid | Senior |
-|---|---|---|---|
-| Finding bugs | Runs scanners, finds OWASP Top 10 with guidance | Finds bugs manually, chains two issues | Finds logic & design flaws, novel bug classes, chains across systems |
-| Fixing bugs | Patches the reported line | Fixes the bug class in that service | Eliminates the class org-wide (secure defaults, frameworks, guardrails) |
-| Code review | Checks a list | Reviews PRs in 1–2 languages confidently | Reviews any language; knows where to look first |
-| Design | — | Comments on designs | Leads threat models, sets architecture patterns |
-| Risk | "Everything is critical" | Uses CVSS | Speaks in business impact, prioritizes ruthlessly, accepts risk explicitly |
-| Influence | Files tickets | Works with one team | Changes how the whole engineering org builds software; mentors |
-
-## Progress tracker
-
-Copy this into your journal and tick as you go.
-
-```
-[ ] Lab setup complete
-[ ] 01  [ ] 02  [ ] 03            Phase 0
-[ ] 04  [ ] 05  [ ] 06  [ ] 07    Phase 1
-[ ] 08  [ ] 09  [ ] 10            Phase 2
-[ ] 11  [ ] 12  [ ] 13            Phase 3
-[ ] 14  [ ] 15  [ ] 16            Phase 4
-[ ] Capstone
-```
+- Only test what you own, your own labs, or targets that explicitly invite testing (CTFs, practice platforms, bug bounty programs within scope).
+- Keep a learning journal. For every lab write the **root cause**, the **right fix**, and **how you'd catch it earlier**. That habit is what turns hacking practice into AppSec skill.
+- Pace: about 8–12 hours a week. Stages 0–3 take roughly 8–11 months; senior judgment then grows by applying it on real systems.
