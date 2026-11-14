@@ -49,6 +49,14 @@ zone (not in the bottom ~20% or top ~12% where UI overlays). Always add captions
 most viewers watch muted. Keep the artist's original audio untouched otherwise.
 For lyric subtitles, supply an .srt via `SRT=lyrics.srt`.
 
+## Audio-only (no video yet)
+If the artist sends only the song (plus a storyboard/script), build a comic/lyric
+visualizer clip with a procedural renderer such as
+`projects/day-off-saving-the-world/render/render_clip.py`. Timing lives in a JSON
+timeline (clip window, lyric lines with song-time `t`, scene per line, beats from
+librosa). Align lines to the beat grid and the gaps in the vocal; say the timing is
+estimated and ask the artist to check it by ear.
+
 ## Step 6 - Package the post
 For each clip deliver: file path, timestamps, score breakdown, and
 - Hook text (<=8 words, curiosity or emotion)
