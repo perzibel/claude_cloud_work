@@ -129,74 +129,11 @@ def sfx(img, txt, cx, cy, size, fill, t_in, t, angle=-8, burst_col=None, seed=0)
     put(img, text_layer(txt, size, fill), cx, cy, k, angle)
 
 # ---------------------------------------------------------------- hero (stylised comic figure)
-def hero(img, cx, cy, s, pose="stand", t=0.0, tremble=0.0, mood=0.0, cape_col=CRIMSON):
-    """cx,cy = pelvis. s = scale (1 ~ 520px tall). mood 0=happy, 1=exhausted."""
-    dr = ImageDraw.Draw(img); ow = max(3, int(7 * s))
-    jx = math.sin(t * 61) * tremble * 6 * s; jy = math.cos(t * 47) * tremble * 4 * s
-    cx += jx; cy += jy
-    P = lambda x, y: (cx + x * s, cy + y * s)
-    def poly(pts, fill): dr.polygon([P(*p) for p in pts], fill=fill, outline=INK, width=ow)
-    def limb(a, b, wdt, fill):
-        (x0, y0), (x1, y1) = P(*a), P(*b)
-        ang = math.atan2(y1 - y0, x1 - x0); nx, ny = -math.sin(ang) * wdt * s / 2, math.cos(ang) * wdt * s / 2
-        q = [(x0 + nx, y0 + ny), (x1 + nx, y1 + ny), (x1 - nx, y1 - ny), (x0 - nx, y0 - ny)]
-        dr.polygon(q, fill=fill, outline=INK, width=ow)
-        r = wdt * s / 2 + ow / 2; dr.ellipse([x1 - r, y1 - r, x1 + r, y1 + r], fill=fill, outline=INK, width=ow)
-    slump = 26 * mood
-    # cape
-    wv = math.sin(t * 5.5) * 30 * (1 - 0.7 * mood)
-    poly([(-58, -205 + slump), (58, -205 + slump), (110 + wv, 120 + 40 * mood), (20 + wv * .5, 150), (-80 + wv, 135), (-120 + wv, 110 + 40 * mood)], cape_col)
-    # legs
-    limb((-30, 0), (-48, 120), 46, NAVY); limb((30, 0), (48, 120), 46, NAVY)
-    limb((-48, 120), (-52, 205), 44, NAVY); limb((48, 120), (52, 205), 44, NAVY)
-    poly([(-80, 190), (-24, 190), (-24, 222), (-86, 222)], BLUE); poly([(24, 190), (80, 190), (86, 222), (24, 222)], BLUE)
-    # torso
-    poly([(-66, -200 + slump), (66, -200 + slump), (44, 0), (-44, 0)], NAVY)
-    poly([(-44, -8), (44, -8), (46, 10), (-46, 10)], GOLD)  # belt
-    dr.line([P(-60, -190 + slump), P(-40, -20)], fill=BLUE, width=max(2, int(8 * s)))
-    dr.line([P(60, -190 + slump), P(40, -20)], fill=BLUE, width=max(2, int(8 * s)))
-    # emblem
-    ey = -130 + slump
-    poly([(0, ey - 40), (38, ey), (0, ey + 40), (-38, ey)], GOLD)
-    dr.polygon([P(6, ey - 26), P(-12, ey + 4), P(2, ey + 4), P(-6, ey + 28), P(14, ey - 6), P(0, ey - 6)], fill=CRIMSON)
-    # arms
-    sh_l, sh_r = (-70, -185 + slump), (70, -185 + slump)
-    if pose == "lift":
-        el_l, ha_l, el_r, ha_r = (-110, -290), (-80, -390), (110, -290), (80, -390)
-    elif pose == "hips":
-        el_l, ha_l, el_r, ha_r = (-130, -110), (-62, -40), (130, -110), (62, -40)
-    elif pose == "point":
-        el_l, ha_l, el_r, ha_r = (-120, -110), (-62, -40), (60, -120), (8, -140 + slump)
-    elif pose == "shrug":
-        el_l, ha_l, el_r, ha_r = (-130, -120), (-170, -210), (130, -120), (170, -210)
-    elif pose == "thumb":
-        el_l, ha_l, el_r, ha_r = (-100, -90), (-70, -20), (130, -140), (150, -250)
-    else:  # slump
-        el_l, ha_l, el_r, ha_r = (-90, -90), (-80, 10), (90, -90), (80, 10)
-    limb(sh_l, el_l, 40, NAVY); limb(el_l, ha_l, 36, BLUE); limb(sh_r, el_r, 40, NAVY); limb(el_r, ha_r, 36, BLUE)
-    if pose == "thumb":
-        hx, hy = P(*ha_r); dr.rounded_rectangle([hx - 10 * s, hy - 70 * s, hx + 12 * s, hy - 14 * s], radius=10 * s, fill=BLUE, outline=INK, width=ow)
-    # head
-    hy0 = -250 + slump * 1.4
-    hx = 0; hcx, hcy = P(hx, hy0)
-    r = 46 * s
-    dr.rectangle([hcx - 18 * s, hcy + 30 * s, hcx + 18 * s, hcy + 60 * s], fill=SKIN, outline=INK, width=ow)
-    dr.ellipse([hcx - r, hcy - r * 1.1, hcx + r, hcy + r], fill=SKIN, outline=INK, width=ow)
-    dr.chord([hcx - r - 4 * s, hcy - r * 1.25, hcx + r + 4 * s, hcy + r * 0.2], 180, 360, fill=HAIR, outline=INK, width=ow)
-    for k in (-1, 0, 1):
-        dr.polygon([(hcx + (k * 24 - 14) * s, hcy - 40 * s), (hcx + (k * 24 + 6) * s, hcy - 64 * s), (hcx + (k * 24 + 14) * s, hcy - 36 * s)], fill=HAIR)
-    # face
-    e_y = hcy + 2 * s
-    lid = mood * 9 * s
-    for ex in (-17, 17):
-        dr.ellipse([hcx + ex * s - 6 * s, e_y - 7 * s + lid, hcx + ex * s + 6 * s, e_y + 7 * s], fill=INK)
-        dr.line([hcx + ex * s - 13 * s, e_y - 18 * s + mood * 6 * s * (1 if ex < 0 else -1), hcx + ex * s + 13 * s, e_y - 18 * s - mood * 6 * s * (1 if ex < 0 else -1)], fill=HAIR, width=max(2, int(6 * s)))
-    m_y = hcy + 26 * s
-    if mood < 0.5:
-        dr.arc([hcx - 18 * s, m_y - 14 * s, hcx + 18 * s, m_y + 12 * s], 10, 170, fill=INK, width=max(2, int(5 * s)))
-    else:
-        dr.arc([hcx - 16 * s, m_y, hcx + 16 * s, m_y + 22 * s], 200, 340, fill=INK, width=max(2, int(5 * s)))
-    return P
+def hero(img, cx, cy, s, pose="stand", t=0.0, tremble=0.0, mood=0.0, cape_col=CRIMSON, expr=None):
+    """Paste the vector comic hero (hero_art.py) with its pelvis at (cx, cy)."""
+    from hero_art import draw_hero
+    im, (ox, oy) = draw_hero(pose, s, t, tremble, mood, cape_col, expr)
+    img.paste(im, (int(cx - ox), int(cy - oy)), im)
 
 def earth(dr, cx, cy, r, t):
     dr.ellipse([cx - r - 10, cy - r - 10, cx + r + 10, cy + r + 10], fill=INK)
@@ -235,12 +172,12 @@ def scene_dayoff(img, c):
         d.rectangle([0, 0, 299, 149], fill=INK); d.rectangle([9, 9, 290, 140], fill=col)
         tl = text_layer(lb, 54 if len(lb) < 8 else 40, WHITE, 6, INK, 4); lay.paste(tl, ((300 - tl.width) // 2, (150 - tl.height) // 2), tl)
         put(img, lay, x, y, 0.9, math.sin(i * 2.1) * 12)
-    hero(img, W / 2 - 60, 1010, 0.95, "shrug", c.t, 0.2 * c.pulse, 0.15)
+    hero(img, W / 2 - 40, 1030, 1.3, "shrug", c.t, 0.2 * c.pulse, 0.15)
     k = ease_out_back((c.lt - 0.9) / 0.25, 2.8)
     if k > 0:
         dr = ImageDraw.Draw(img)
         sz = 1 + 0.06 * c.pulse
-        bx, by = W / 2 + 150, 560
+        bx, by = W / 2 + 170, 470
         dr.ellipse([bx - 330 * k * sz, by - 150 * k * sz, bx + 330 * k * sz, by + 150 * k * sz], fill=INK)
         dr.ellipse([bx - 316 * k * sz, by - 136 * k * sz, bx + 316 * k * sz, by + 136 * k * sz], fill=WHITE)
         dr.polygon([(bx - 150 * k, by + 110 * k), (bx - 70 * k, by + 120 * k), (bx - 230 * k, by + 250 * k)], fill=WHITE, outline=INK, width=10)
@@ -265,7 +202,7 @@ def scene_catch(img, c):
         dr.line([(lerp(x0, x1, f / max(lad, 1e-3) * lad), lerp(y0, y1, f / max(lad, 1e-3) * lad)),
                  (lerp(x0, x1, f / max(lad, 1e-3) * lad) + 70, lerp(y0, y1, f / max(lad, 1e-3) * lad))], fill=WHITE, width=8)
     # hero relaxed on left giving thumbs up
-    hero(img, 290, 900, 0.82, "thumb", c.t, 0, 0.0)
+    hero(img, 300, 980, 1.08, "thumb", c.t, 0, 0.0)
     if c.lt > 1.1: sfx(img, "PHEW!", 330, 380, 120, GOLD, 1.1, c.lt, -10, CRIMSON, 4)
     if c.lt > 0.5: sfx(img, "GOT HER!", 800, 300, 80, WHITE, 0.5, c.lt, 6, BLUE, 2)
 
@@ -287,7 +224,7 @@ def scene_sky(img, c):
     if int(c.t * 8) % 3 == 0:
         x = 120 + (int(c.t * 8) * 137) % 800
         dr.line([(x, 560), (x + 30, 610), (x - 10, 650), (x + 40, 720)], fill=(255, 255, 160), width=8)
-    hero(img, W / 2, 1000, 1.0, "lift", c.t, 0.6 + 0.8 * c.lt / 3, 0.4)
+    hero(img, W / 2, 1110, 1.3, "lift", c.t, 0.6 + 0.8 * c.lt / 3, 0.4)
     if c.lt > 1.3: sfx(img, "NNGH!", 230, 820, 110, GOLD, 1.3, c.lt, -12, None)
 
 def scene_friday(img, c):
@@ -305,7 +242,7 @@ def scene_friday(img, c):
     panel(img, (halfx + 30, 300, W - 30, 1150), (40, 70, 150), 12)
     clip = Image.new("RGB", (W - 60 - halfx, 850), (40, 70, 150)); cd = ImageDraw.Draw(clip)
     cd.ellipse([-200, -500, clip.width + 200, 260], fill=INK); cd.ellipse([-188, -488, clip.width + 188, 248], fill=(70, 100, 200))
-    hero(clip, clip.width / 2, 600, 0.68, "lift", c.t, 0.9, 0.55)
+    hero(clip, clip.width / 2, 640, 0.85, "lift", c.t, 0.9, 0.55)
     img.paste(clip, (halfx + 30, 300))
     if c.lt > 1.2: sfx(img, "SIGH...", 780, 1050, 80, WHITE, 1.2, c.lt, 4, None)
 
@@ -330,7 +267,7 @@ def scene_oneman(img, c):
         img.paste(lay, (int(x), int(y)))
     if collapse > 0.9:
         burst(dr, W / 2, 740, 420, GOLD, 18, 0.35, c.lt, INK, 12, 3)
-        hero(img, W / 2, 860, 0.85, "point", c.t, 0.2, 0.3)
+        hero(img, W / 2, 920, 1.25, "point", c.t, 0.2, 0.3)
     sfx(img, "HEY!", 250, 440, 170, GOLD, 0.0, c.lt, -12, CRIMSON, 6)
 
 def scene_montage(img, c):
@@ -347,7 +284,7 @@ def scene_montage(img, c):
     # tilted panel
     lay = Image.new("RGB", (900, 760), b); d = ImageDraw.Draw(lay)
     speed_lines(d, 450, 380, c.t, WHITE, 26, 200, beat_i + 3)
-    hero(lay, 450 + rnd.randint(-80, 80), 560, 0.9, poses[beat_i % 8], c.t, 0.1, min(1, c.lt / 3.0))
+    hero(lay, 450 + rnd.randint(-60, 60), 600, 1.05, poses[beat_i % 8], c.t, 0.1, min(1, c.lt / 3.0))
     fr = Image.new("RGBA", (920, 780), INK + (255,)); fr.paste(lay, (10, 10))
     put(img, fr, W / 2, 760, 1 + 0.04 * c.pulse, ang)
     sfx(img, words[beat_i % 8], W / 2 + rnd.randint(-200, 200), 430 + rnd.randint(-30, 30), 150, WHITE, beat_i * 0.393, c.lt, rnd.uniform(-14, 14), CRIMSON if a != CRIMSON else NAVY, beat_i)
@@ -358,8 +295,8 @@ def scene_world(img, c):
     rays(dr, W / 2, 520, c.lt, (255, 200, 60), (255, 150, 40), 22, 0.2) if c.lt < 1.8 else rays(dr, W / 2, 520, c.lt, mix((255, 200, 60), (60, 70, 160), (c.lt - 1.8) / 1.2), mix((255, 150, 40), (40, 50, 130), (c.lt - 1.8) / 1.2), 22, 0.2)
     rise = ease_out(c.lt / 0.6)
     trem = max(0, (c.lt - 1.4)) * 1.4
-    ex, ey = W / 2 + math.sin(c.t * 50) * trem * 5, lerp(780, 450, rise)
-    hero(img, W / 2, 1080, 1.0, "lift", c.t, trem, min(1, max(0, c.lt - 1.5) / 1.2))
+    ex, ey = W / 2 + math.sin(c.t * 50) * trem * 5, lerp(760, 470, rise)
+    hero(img, W / 2, 1150, 1.2, "lift", c.t, trem, min(1, max(0, c.lt - 1.5) / 1.2))
     earth(dr, ex, ey, 210, c.lt)
     if c.lt > 0.3: sfx(img, "HUP!", 860, 900, 100, GOLD, 0.3, c.lt, 10, CRIMSON, 8)
 
@@ -369,7 +306,7 @@ def scene_carry(img, c):
     img.paste(mix((40, 50, 130), (14, 22, 70), fade), [0, 0, W, H])
     starfield(img, 90, 21)
     dr.ellipse([W / 2 - 300, 1000, W / 2 + 300, 1080], fill=(30, 40, 100), outline=INK, width=8)
-    hero(img, W / 2, 820 + 40 * fade, 0.95, "slump", c.t, 0, 1.0, mix(CRIMSON, (110, 40, 70), fade))
+    hero(img, W / 2, 860 + 30 * fade, 1.3, "slump", c.t, 0, 1.0, mix(CRIMSON, (110, 40, 70), fade))
     # notebook pull-back at the end
     nb = ease_out((c.lt - 2.1) / 0.9)
     if nb > 0:

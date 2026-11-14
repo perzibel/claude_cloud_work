@@ -10,14 +10,14 @@
 - The visuals change every line (about 3 s) and on every beat in the montage, which helps retention.
 - It loops: "…who's gonna carry me through?" rolls straight back into "I need a day off…".
 
-## Virality Predictor score (heuristic estimate): **79 / 100** (post, with minor tweaks)
+## Virality Predictor score (heuristic estimate): **80 / 100** (post, with minor tweaks)
 | Dimension | Score | Note |
 |---|---|---|
 | Hook (0–3 s) | 21/25 | Title line and text hook from frame 0; the opening image could be more striking |
 | Retention & loop | 16/20 | 25 s, scene change every line, clean loop point |
 | Emotion & shareability | 12/15 | Strong "tag someone who needs a day off" energy |
 | Audio trend-fit | 11/15 | Shoutable chorus; it's a new original, so trend-fit is unproven |
-| Visual & format | 7/10 | Native 9:16, safe-zone captions; procedural art is simpler than the planned illustrated video |
+| Visual & format | 8/10 | Native 9:16, safe-zone captions, vector cel-shaded hero (`render/hero_art.py`) |
 | Caption & CTA | 8/10 | See copy below |
 | Discoverability | 4/5 | Niche tags plus a collab post |
 
